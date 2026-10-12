@@ -1,0 +1,23 @@
+{
+  "name": "central-servicos-supabase",
+  "version": "1.0.0",
+  "description": "Site de exemplo com login: telas em React no GitHub Pages, login e dados no Supabase",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "engines": {
+    "node": "^20.19.0 || >=22.12.0"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.117.3",
+    "@vitejs/plugin-react": "^6.1.2",
+    "chart.js": "^4.5.1",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "vite": "^8.3.3"
+  }
+}

@@ -1,0 +1,394 @@
+/* ============================================================
+   estilo.css — APARÊNCIA DE TODAS AS TELAS
+   ============================================================
+   O mesmo CSS do site anterior, com acréscimos para o login,
+   o menu de botões e o nome da pessoa logada. No React, o CSS
+   continua sendo CSS comum: é importado uma vez no main.jsx.
+
+   Lembrete do formato:   quem { propriedade: valor; }
+     .nome  -> elementos com class="nome"
+     #nome  -> o elemento com id="nome"
+   ============================================================ */
+
+
+/* --- 1. CORES E FONTES (as "variáveis" do site) --- */
+:root {
+  --fundo:      #f4f6f9;   /* cinza-azulado bem claro, fundo da página */
+  --superficie: #ffffff;   /* branco dos cartões */
+  --borda:      #dde3ea;   /* linhas finas */
+  --texto:      #1b2533;   /* texto principal */
+  --texto-2:    #5b6878;   /* texto secundário (legendas) */
+  --destaque:   #1f5fbf;   /* azul principal: links, botões, gráfico de entrantes */
+
+  /* Cores com SIGNIFICADO (usadas nos gráficos e etiquetas) */
+  --realizado:  #1e8a5a;   /* verde = concluído */
+  --pendente:   #c98300;   /* âmbar = aguardando */
+  --atrasado:   #c8423b;   /* vermelho = passou do prazo */
+
+  --fonte:      "IBM Plex Sans", "Segoe UI", Arial, sans-serif;
+  --fonte-mono: "IBM Plex Mono", Consolas, monospace;  /* para números de OS e códigos */
+  --raio:       10px;      /* arredondamento dos cantos */
+}
+
+
+/* --- 2. BASE --- */
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: var(--fonte);
+  font-size: 15px;
+  line-height: 1.55;
+  color: var(--texto);
+  background: var(--fundo);
+  color-scheme: light;
+}
+
+h1, h2, h3 { line-height: 1.2; text-wrap: balance; margin: 0; }
+h1 { font-size: 1.9rem; font-weight: 600; }
+h2 { font-size: 1.15rem; font-weight: 600; }
+p  { margin: 0; }
+a  { color: var(--destaque); }
+
+/* Contêiner central: limita a largura e cria a margem lateral */
+.conteudo {
+  max-width: 1160px;
+  margin: 0 auto;
+  padding: 28px 16px 56px;
+  display: grid;
+  gap: 24px;
+}
+
+.mono { font-family: var(--fonte-mono); font-variant-numeric: tabular-nums; }
+.legenda { color: var(--texto-2); font-size: 0.88rem; }
+
+
+/* --- 3. CABEÇALHO E MENU (igual em todas as páginas) --- */
+.topo {
+  background: var(--superficie);
+  border-bottom: 1px solid var(--borda);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+.topo-dentro {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 0 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px 24px;
+  min-height: 60px;
+}
+.marca {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 600;
+  color: var(--texto);
+  text-decoration: none;
+}
+.marca-icone {               /* o quadradinho azul do logotipo */
+  width: 22px;
+  height: 22px;
+  border-radius: 6px;
+  background: var(--destaque);
+  box-shadow: inset -7px -7px 0 rgba(255, 255, 255, 0.35);
+}
+.menu { display: flex; flex-wrap: wrap; gap: 4px; }
+.menu button {
+  font: inherit;
+  border: none;
+  background: none;
+  cursor: pointer;
+  padding: 8px 12px;
+  border-radius: 8px;
+  color: var(--texto-2);
+  font-weight: 500;
+}
+.menu button:hover { background: var(--fundo); color: var(--texto); }
+/* O botão da página atual recebe className="ativo" */
+.menu button.ativo { color: var(--destaque); background: #e8effa; }
+
+/* Nome da pessoa logada + botão Sair */
+.usuario { display: flex; align-items: center; gap: 12px; }
+.usuario-nome { display: flex; align-items: center; gap: 8px; font-weight: 500; }
+.perfil {
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 2px 8px;
+  border-radius: 999px;
+}
+.perfil-gestor   { background: #e8effa; color: var(--destaque); }
+.perfil-consulta { background: #eef1f4; color: var(--texto-2); }
+
+
+/* --- 4. TÍTULO DE CADA PÁGINA --- */
+.cabecalho-pagina { display: grid; gap: 6px; }
+.cabecalho-pagina p { color: var(--texto-2); max-width: 65ch; }
+.sobretitulo {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--destaque);
+}
+
+
+/* --- 5. CARTÕES (caixas brancas) --- */
+.cartao {
+  background: var(--superficie);
+  border: 1px solid var(--borda);
+  border-radius: var(--raio);
+  padding: 20px;
+  display: grid;
+  gap: 12px;
+  min-width: 0;            /* evita que conteúdo largo estoure a tela */
+}
+
+
+/* --- 6. INDICADORES (os números grandes) --- */
+.indicadores {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+  gap: 12px;
+}
+.indicador {
+  background: var(--superficie);
+  border: 1px solid var(--borda);
+  border-radius: var(--raio);
+  padding: 16px 18px;
+  display: grid;
+  gap: 2px;
+  border-top: 3px solid var(--cor, var(--destaque));  /* faixa colorida no topo */
+}
+.indicador .rotulo { font-size: 0.85rem; color: var(--texto-2); }
+.indicador .valor {
+  font-size: 1.9rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+.indicador .detalhe { font-size: 0.8rem; color: var(--texto-2); }
+
+
+/* --- 7. PÁGINA INICIAL: atalhos para as outras páginas --- */
+.atalhos {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 12px;
+}
+.atalho {
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  background: var(--superficie);
+  border: 1px solid var(--borda);
+  border-radius: var(--raio);
+  padding: 20px;
+  display: grid;
+  gap: 6px;
+  color: var(--texto);
+  text-decoration: none;
+}
+.atalho:hover { border-color: var(--destaque); }
+.atalho p { color: var(--texto-2); }
+.atalho .ir { color: var(--destaque); font-weight: 600; margin-top: 6px; }
+
+
+/* --- 8. FILTROS (caixas de seleção e busca) --- */
+.filtros {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: end;
+}
+.campo { display: grid; gap: 4px; font-size: 0.85rem; color: var(--texto-2); }
+.campo select,
+.campo input[type="search"] {
+  font: inherit;
+  font-size: 0.95rem;
+  color: var(--texto);
+  background: var(--superficie);
+  border: 1px solid var(--borda);
+  border-radius: 8px;
+  padding: 8px 10px;
+  min-width: 160px;
+}
+.campo input[type="search"] { min-width: 220px; }
+.campo input:not([type]), .campo input[type="password"], .campo input[type="email"] {
+  font: inherit;
+  color: var(--texto);
+  background: var(--superficie);
+  border: 1px solid var(--borda);
+  border-radius: 8px;
+  padding: 10px 12px;
+}
+.marcar { display: flex; gap: 6px; align-items: center; padding-bottom: 9px; font-size: 0.9rem; }
+.botao {
+  font: inherit;
+  font-weight: 500;
+  border: 1px solid var(--borda);
+  background: var(--superficie);
+  color: var(--texto);
+  border-radius: 8px;
+  padding: 8px 14px;
+  cursor: pointer;
+}
+.botao:hover:not(:disabled) { border-color: var(--destaque); color: var(--destaque); }
+.botao:disabled { opacity: 0.45; cursor: default; }
+.botao.primario { background: var(--destaque); border-color: var(--destaque); color: #fff; }
+.botao.primario:hover:not(:disabled) { color: #fff; filter: brightness(1.08); }
+.botao.pequeno { padding: 4px 10px; font-size: 0.85rem; }
+.confirmar { display: inline-flex; gap: 6px; }
+
+/* Contorno visível ao navegar pelo teclado (Tab) */
+a:focus-visible, .menu button:focus-visible, .atalho:focus-visible, button:focus-visible, select:focus-visible, input:focus-visible {
+  outline: 2px solid var(--destaque);
+  outline-offset: 2px;
+}
+
+
+/* --- 9. GRADE DE GRÁFICOS DO DASHBOARD --- */
+.graficos {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));   /* 2 colunas */
+  gap: 16px;
+}
+.grafico-caixa {
+  position: relative;      /* o Chart.js precisa disso para medir o tamanho */
+  height: 280px;
+}
+
+
+/* --- 10. TABELA DA LISTA --- */
+.tabela-rolagem { overflow-x: auto; }   /* no celular, a tabela rola para o lado */
+table { width: 100%; border-collapse: collapse; font-size: 0.92rem; }
+th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--borda); white-space: nowrap; }
+th { font-size: 0.8rem; color: var(--texto-2); font-weight: 600; }
+td.numero, th.numero { text-align: right; font-variant-numeric: tabular-nums; }
+td.atrasado { color: var(--atrasado); font-weight: 600; }
+tbody tr:hover { background: #f8fafc; }
+/* Botões dentro do cabeçalho da tabela (para ordenar) */
+th button {
+  all: unset;
+  cursor: pointer;
+  display: inline-flex;
+  gap: 4px;
+  align-items: center;
+}
+th button:hover { color: var(--texto); }
+th button:focus-visible { outline: 2px solid var(--destaque); outline-offset: 2px; }
+
+.paginacao { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; justify-content: space-between; }
+
+
+/* --- 11. ETIQUETAS DE STATUS (as "pílulas" coloridas) --- */
+.etiqueta {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+.etiqueta.realizado { background: #e3f3eb; color: var(--realizado); }
+.etiqueta.pendente  { background: #fbf0dc; color: #8f5d00; }
+.etiqueta.atrasado  { background: #f9e4e2; color: var(--atrasado); }
+
+
+/* --- 12. MENSAGENS (erro e sucesso) --- */
+.mensagem {
+  margin: 0;
+  border-radius: 8px;
+  padding: 10px 14px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+.mensagem.erro { background: #fdf1f0; border: 1px solid #f0c4c0; color: #7d2620; }
+.mensagem.ok   { background: #e9f6ef; border: 1px solid #b9e0cb; color: #14603f; }
+.mensagem .fechar { font: inherit; font-size: 1.2rem; line-height: 1; border: none; background: none; color: inherit; cursor: pointer; }
+
+
+/* --- 13. TELA DE LOGIN --- */
+.login-pagina {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+}
+.login-apresentacao {
+  background: #16233a;            /* azul bem escuro */
+  color: #dfe7f3;
+  padding: 48px clamp(16px, 6vw, 72px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 20px;
+}
+.login-apresentacao .marca { color: #fff; }
+.login-apresentacao h1 { font-size: clamp(1.7rem, 3vw, 2.4rem); color: #fff; max-width: 20ch; }
+.login-apresentacao p { max-width: 46ch; color: #b7c4d8; }
+.login-cartao {
+  padding: 48px clamp(16px, 6vw, 72px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 20px;
+  max-width: 520px;
+  width: 100%;
+  margin: 0 auto;
+}
+.login-cartao h2 { font-size: 1.5rem; }
+.login-formulario { display: grid; gap: 14px; }
+.login-formulario .botao { padding: 11px 14px; }
+.demonstracao { display: grid; gap: 8px; border-top: 1px solid var(--borda); padding-top: 18px; }
+.demo {
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  display: grid;
+  gap: 2px;
+  background: var(--superficie);
+  border: 1px dashed var(--borda);
+  border-radius: 8px;
+  padding: 10px 12px;
+}
+.demo:hover { border-color: var(--destaque); }
+
+
+/* Tela de espera e avisos de configuração */
+.carregando {
+  max-width: 640px;
+  margin: 80px auto;
+  padding: 0 16px;
+  display: grid;
+  gap: 16px;
+  justify-items: start;
+  color: var(--texto-2);
+}
+
+
+/* --- 14. RODAPÉ --- */
+.rodape {
+  border-top: 1px solid var(--borda);
+  color: var(--texto-2);
+  font-size: 0.85rem;
+  text-align: center;
+  padding: 20px 16px;
+}
+
+
+/* --- 15. CELULAR: regras para telas estreitas --- */
+@media (max-width: 760px) {
+  .graficos { grid-template-columns: 1fr; }                  /* 1 coluna só */
+  .login-pagina { grid-template-columns: 1fr; min-height: 0; }
+  .login-apresentacao { padding-block: 32px; }
+  h1 { font-size: 1.5rem; }
+  .indicador .valor { font-size: 1.6rem; }
+  .campo select, .campo input[type="search"] { min-width: 0; width: 100%; }
+  .campo { flex: 1 1 140px; }
+}
