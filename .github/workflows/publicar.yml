@@ -1,0 +1,68 @@
+# ============================================================
+# publicar.yml — PUBLICAÇÃO AUTOMÁTICA NO GITHUB PAGES
+# ============================================================
+# Toda vez que você envia arquivos para o GitHub (branch main),
+# o GitHub Actions faz, numa máquina dele:
+#   1. baixa o código
+#   2. instala o Node e as bibliotecas (npm install)
+#   3. monta o React (npm run build), já com o endereço e a chave
+#      do Supabase cadastrados em Settings > Secrets and variables
+#   4. publica a pasta dist/ no GitHub Pages
+# Você não precisa ter o Node instalado no seu computador.
+# ============================================================
+
+name: Publicar no GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:          # permite rodar à mão pela aba Actions
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  montar:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Baixar o código
+        uses: actions/checkout@v5
+
+      - name: Instalar o Node
+        uses: actions/setup-node@v5
+        with:
+          node-version: 24
+
+      - name: Instalar as bibliotecas
+        run: npm install
+
+      - name: Montar o site
+        run: npm run build
+        env:
+          VITE_SUPABASE_URL: ${{ vars.VITE_SUPABASE_URL }}
+          VITE_SUPABASE_PUBLISHABLE_KEY: ${{ vars.VITE_SUPABASE_PUBLISHABLE_KEY }}
+
+      - name: Preparar o GitHub Pages
+        uses: actions/configure-pages@v5
+
+      - name: Enviar a pasta dist
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: dist
+
+  publicar:
+    needs: montar
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Publicar
+        id: deployment
+        uses: actions/deploy-pages@v4
